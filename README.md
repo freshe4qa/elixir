@@ -14,6 +14,7 @@ Explorer:
  - 2x CPUs; the faster clock speed the better
  - 4GB RAM
  - 40GB of storage (SSD or NVME)
+ - Ubuntu 20.04
 
 ```
 sudo apt update && sudo apt upgrade -y
