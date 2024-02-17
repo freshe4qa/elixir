@@ -69,6 +69,8 @@ docker restart $(docker ps -a -q)
 Посмотреть логи:
 ```
 docker logs --follow  container_id
+
+docker logs -f --tail 100 ev
 ```
 Удалить ноду:
 ```
