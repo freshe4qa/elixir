@@ -2,7 +2,7 @@
   <img height="100" height="auto" src="https://github.com/freshe4qa/elixir/assets/85982863/8e8e8d61-ccac-44b9-832b-2c9c0c200988">
 </p>
 
-# Elixir - Testnet v2
+# Elixir - Testnet v3
 
 Official documentation:
 >- [Guide](https://docs.elixir.finance)
