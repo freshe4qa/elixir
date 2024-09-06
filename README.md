@@ -40,25 +40,37 @@ sudo apt install docker-ce docker-ce-cli containerd.io docker-compose-plugin -y
 Создав новый кошелек, сохраняем адрес и закрытый ключ.
 
 ```
-wget https://files.elixir.finance/Dockerfile
+wget https://files.elixir.finance/validator.env
 ```
 
-Введите в файл адрес кошелька и закрытый ключ. Дайте своему валидатору имя.
+Заполняем данные:
+
+STRATEGY_EXECUTOR_DISPLAY_NAME=Придумайте имя валидатору
+STRATEGY_EXECUTOR_BENEFICIARY=Адрес кошелька Metamask
+SIGNER_PRIVATE_KEY=Приватный ключ от этого кошелька Metamask
 
 ```
-nano Dockerfile
+nano validator.env
 ```
 
 Сохраняем CTRL + O, CTRL + X
 
-```
-docker build . -f Dockerfile -t elixir-validator
-```
-```
-docker run -d --restart unless-stopped --name ev elixir-validator
-```
+Сеть Testnet v3 работает на токенах MOCK в тестовой сети Ethereum Sepolia. Чтобы получить токены MOCK, вам понадобится небольшое количество Sepolia ETH в любом кошельке. Перейдите на [панель Elixir Network Testnet v3 Dashboard](https://testnet-3.elixir.xyz) и подключите свой кошелек. Убедитесь, что вы подключены к сети Ethereum Sepolia, а затем нажмите кнопку "MINT 1,000 MOCK". Подтвердите транзакцию в своем кошельке. Примечание: Этот кошелек должен отличаться от того, который вы используете для валидатора.
 
-Переходим на сайт(https://dashboard.elixir.finance/) и подключаем кошелек, который используем для вадидатора. Клеймим токены. Нажимаем stake и стейкаем токены, минимально 100 токенов. Далее нажимаем enroll и регистрируем валидатора.
+После того как вы получили токены MOCK с приборной панели, вам нужно одобрить их для траты на цепочке, а затем застейкать. В окне Stake MOCK введите сумму токенов MOCK, которую вы хотите поставить на кон. Нажмите "APPROVE MOCK FOR STAKING" и подтвердите транзакцию в своем кошельке. Дождитесь завершения транзакции на цепочке, затем нажмите "STAKE <сумма> MOCK" и подтвердите транзакцию.
+
+Нажмите кнопку "CUSTOM VALIDATOR" над списком активных валидаторов. В появившемся модале "Пользовательский валидатор" введите адрес публичного кошелька вашего валидатора, созданный для валидатора, и нажмите кнопку "DELEGATE". Подтвердите транзакцию и дождитесь ее завершения на цепочке. Теперь вы готовы запустить свой валидатор.
+
+```
+docker pull elixirprotocol/validator:v3
+```
+```
+docker run -d \
+  --env-file $HOME/validator.env \
+  --name elixir \
+  --restart unless-stopped \
+  elixirprotocol/validator:v3
+```
 
 Полезные команды:
 
@@ -69,8 +81,6 @@ docker restart $(docker ps -a -q)
 Посмотреть логи:
 ```
 docker logs --follow  container_id
-
-docker logs -f --tail 100 ev
 ```
 Удалить ноду:
 ```
@@ -80,12 +90,7 @@ docker rm $(docker ps -a -q)
 
 Обновить ноду:
 ```
-docker kill ev
-docker rm ev
-docker pull elixirprotocol/validator:testnet-2
-docker build . -f Dockerfile -t elixir-validator
-```
-
-```
-docker run -d --restart unless-stopped --name ev elixir-validator
+docker kill elixir
+docker rm elixir
+docker pull elixirprotocol/validator:v3
 ```
